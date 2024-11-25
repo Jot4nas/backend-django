@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include 
 from rest_framework import routers 
 from account.API import viewsets as accountviewsets 
-from account.API.viewsets import LoginView
+
 
 # Configurando o DefaultRouter para rotas automáticas
 route = routers.DefaultRouter()
@@ -28,10 +28,6 @@ route.register(r'accounts', accountviewsets.RegisterViewSet, basename="register"
 urlpatterns = [
     # Rota do admin
     path('admin/', admin.site.urls),
-    
-    # Rota personalizada para login
-    path('login/', accountviewsets.LoginView.as_view(), name='login'),
-
     # Incluindo as rotas do router
     path('', include(route.urls)),  
     
