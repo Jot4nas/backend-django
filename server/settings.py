@@ -1,42 +1,14 @@
 from pathlib import Path
 
 SITE_ID = 1
-LOGIN_REDIRECT_URL = '/'
+
 DEBUG = True
 
-# Definir o que será usado para login
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "none"
+
 # Durante os testes, use o console (vai imprimir os e-mails no terminal)
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.office365.com' 
-# EMAIL_HOST = 'smtp-mail.outlook.com'  # Servidor SMTP do Hotmail/Outlook
-EMAIL_PORT = 587  # Porta SMTP para envio de e-mail
-EMAIL_USE_TLS = True  # Usar TLS (Transport Layer Security)
-EMAIL_HOST_USER = 'philipe2015amancio@hotmail.com'  # Seu e-mail Hotmail
-EMAIL_HOST_PASSWORD = 'tlhmoheqppyoqndn'  # Sua senha ou senha de aplicativo (se usar 2FA)
-DEFAULT_FROM_EMAIL = 'philipe2015amancio@hotmail.com'  # E-mail do remetente
-
-
-
-
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',  # Necessário para o dj-rest-auth
-]
-
-# Configuração do allauth para autenticação por e-mail
-ACCOUNT_AUTHENTICATION_METHOD = 'email'  # Permite login apenas com e-mail
-ACCOUNT_EMAIL_REQUIRED = True  # O e-mail é obrigatório
-ACCOUNT_USERNAME_REQUIRED = False  # Remove o campo de username se não for necessário
-
-
-
-
 #Modelo de usuário
-AUTH_USER_MODEL = 'profileAuth.Register'  # Substitua 'profileAuth' pelo nome do seu aplicativo
+# AUTH_USER_MODEL = 'profile.Register'  # Substitua 'profileAuth' pelo nome do seu aplicativo
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -53,13 +25,6 @@ DEBUG = os.environ["DEBUG"]
 
 ALLOWED_HOSTS = ['*']
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ]
-}
-
 
 # Application definition
 
@@ -71,15 +36,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #App para login/register
-    'profileAuth.apps.AccountConfig',
-    # 'profileAuth',
+    'profile',
     'django.contrib.sites',
     'rest_framework.authtoken',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',#autenticcação por terceiros
-    'django_extensions',
-    'dj_rest_auth',
+    #autenticcação por terceiros
+    'allauth.socialaccount',
 
     'corsheaders',
     'rest_framework',
@@ -122,6 +85,17 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = [
+  
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+]
+
 
 WSGI_APPLICATION = 'server.wsgi.application'
 

@@ -16,23 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from dj_rest_auth.views import LoginView, LogoutView
-from profileAuth.API.viewsets import CustomRegisterView  # Importando a view personalizada
 
 urlpatterns = [
     # Rota do admin
     path('admin/', admin.site.urls),
     
-    # URLs de login e logout do dj_rest_auth
-    path('api/auth/login/', LoginView.as_view(), name='rest_login'),
-    path('api/auth/logout/', LogoutView.as_view(), name='rest_logout'),
-    
-    # URL de registro utilizando a sua view personalizada
-    path('api/auth/registration/', CustomRegisterView.as_view(), name='rest_register'),
-   
-    # Incluindo as URLs do dj_rest_auth para o gerenciamento de usuários e autenticação
-    path('api/auth/', include('dj_rest_auth.urls')),
-    
-    # Incluindo as URLs do allauth (se necessário, como para login via redes sociais)
-    path('api/auth/social/', include('allauth.socialaccount.urls')),
+    path('accounts/', include('allauth.urls')),
 ]
