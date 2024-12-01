@@ -1,19 +1,8 @@
 from pathlib import Path
 
-SITE_ID = 1
-
-DEBUG = True
-
-
-# Durante os testes, use o console (vai imprimir os e-mails no terminal)
-
-#Modelo de usuário
-# AUTH_USER_MODEL = 'profile.Register'  # Substitua 'profileAuth' pelo nome do seu aplicativo
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 from dotenv import load_dotenv
 import os
@@ -25,6 +14,13 @@ DEBUG = os.environ["DEBUG"]
 
 ALLOWED_HOSTS = ['*']
 
+#Personalização do register
+AUTH_USER_MODEL = 'profile.CustomUser'
+
+REST_AUTH = {
+    'REGISTER_SERIALIZER': 'profile.API.serializers.CustomRegisterSerializer',
+}
+######################
 
 # Application definition
 
@@ -41,8 +37,10 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'allauth',
     'allauth.account',
-    #autenticcação por terceiros
-    'allauth.socialaccount',
+    'allauth.socialaccount',#autenticcação por terceiros
+        #junção do allauth com o rest_auth para a integrção
+        'dj_rest_auth',
+        'dj_rest_auth.registration',
 
     'corsheaders',
     'rest_framework',
@@ -54,9 +52,15 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    #react - django intermediaro
     'corsheaders.middleware.CorsMiddleware',
+    
     'django.middleware.common.CommonMiddleware',
+
+    'allauth.account.middleware.AccountMiddleware',
+
     'django.middleware.csrf.CsrfViewMiddleware',
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -162,3 +166,44 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Integração React - Django
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+}
+
+AUTHENTICATION_BACKENDS = (
+   "django.contrib.auth.backends.ModelBackend",
+   "allauth.account.auth_backends.AuthenticationBackend"
+)
+
+CORS_ORIGIN_WHITELIST = (
+    "http://localhost:3000",
+    "http://localhost:8000",
+)
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+
+SITE_ID = 1
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'http://localhost:8000/api/v1/dj-rest-auth/login/'
+LOGIN_URL = 'http://localhost:8000/api/v1/dj-rest-auth/login/'
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'users.serializers.UserProfileSerializer'
+}
+###################################################### Fim integração do settings
