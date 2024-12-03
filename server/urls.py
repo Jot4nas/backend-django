@@ -23,7 +23,7 @@ urlpatterns = [
     # Rota do admin
     path('admin/', admin.site.urls),
     
-    path('accounts/', include('allauth.urls')),
+    # path('accounts/', include('allauth.urls')),
 
     path('api/v1/dj-rest-auth/', include('dj_rest_auth.urls')),
     
@@ -32,7 +32,7 @@ urlpatterns = [
         ConfirmEmailView.as_view(), name='account_confirm_email'
     ), # Needs to be defined before the registration path
    
-    path('api/v1/dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('registration/', include('dj_rest_auth.registration.urls')),
     
     path(
         'api/v1/dj-rest-auth/account-confirm-email/',
